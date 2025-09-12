@@ -20,16 +20,15 @@
     </a>
     <ul class="nav nav-pills">
       <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">Home</a>
+        <a href="{% url 'index' %}" class="nav-link active" aria-current="page">Home</a>
       </li>
       <li class="nav-item"><a href="#" class="nav-link">Posts</a></li>
       <li class="nav-item"><a href="#" class="nav-link">Comments</a></li>
       <li class="nav-item d-flex">
         {% if user.is_authenticated %}
-          <p>Salom, {{ user.username }}</p>
-          <a href="{% url 'logout' %}">Logout</a>
+          <a class="nav-link link-success" href="{% url 'logout' %}">Hello, {{ user.username }}</a>
         {% else %}
-          <a href="{% url 'login' %}">Login</a>
+          <a class="nav-link link-success" href="{% url 'login' %}">Login</a>
         {% endif %}
       </li>
     </ul>
