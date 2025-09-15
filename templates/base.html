@@ -35,7 +35,7 @@
       </li>
       {% if user.is_authenticated and user.is_staff %}
       <li class="nav-item">
-        <a href="{% url 'pending_posts' %}" class="nav-link">Tasdiqlanmagan postlar</a>
+        <a href="{% url 'pending_posts' %}" class="nav-link {% if request.resolver_match.url_name == 'pending_posts' %}active{% endif %}">Tasdiqlanmagan postlar</a>
       </li>
       {% endif %}
       <li class="nav-item d-flex">
