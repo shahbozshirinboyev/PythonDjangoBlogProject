@@ -1,32 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="card p-3">
   <h1>{{ post.title }}</h1>
   {% if post.image %}
-    <img src="{{ post.image.url }}" alt="{{ post.title }}" width="400">
+  <img src="{{ post.image.url }}" alt="{{ post.title }}" width="400">
   {% endif %}
   <p>{{ post.content }}</p>
   <p><strong>Category:</strong> {{ post.category }}</p>
   <p><strong>Tags:</strong>
     {% for tag in post.tags.all %}
-      {{ tag.name }}
+    <span class="badge text-bg-primary">{{tag.name }}</span>
     {% empty %}
-      No tags
+    No tags
     {% endfor %}
   </p>
   <p><strong>Views:</strong> {{ post.views }}</p>
-  <p><small>By {{ post.author }} | {{ post.created_at|date:"d-m-Y H:i" }}</small></p>
+  <p><small>By {{ post.author }} | {{ post.created_at|date:"d-m-Y H:i"
+      }}</small></p>
+</div>
 
-  <hr>
-  <h3>Comments:</h3>
-  <ul>
-    {% for comment in post.comments.all %}
-      <li>
-        <b>{{ comment.author.username }}:</b> {{ comment.content }}
-        <small>({{ comment.created_at|date:"d-m-Y H:i" }})</small>
-      </li>
-    {% empty %}
-      <li>No comments yet.</li>
-    {% endfor %}
-  </ul>
+<h3 class="pt-4">Comments:</h3>
+
+{% if user.is_authenticated %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Izoh qoldirish</button>
+</form>
+{% else %}
+<p>Izoh qoldirish uchun <a href="{% url 'login' %}">login</a> qiling.</p>
+{% endif %}
+<hr>
+
+{% for comment in comments %}
+<div class="border p-2 mb-2 rounded">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-2">
+      {% if comment.author.profile_image %}
+      <img src="{{ comment.author.profile_image.url }}" alt="{{ comment.author.username }}" class="rounded-circle"
+        width="24" height="24">
+      {% else %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle"
+        viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+        <path fill-rule="evenodd"
+          d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+      </svg>
+      {% endif %}
+      <span>{{ comment.author.username | capfirst }}</span>
+    </div>
+    <small class="text-muted">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3-week"
+        viewBox="0 0 16 16">
+        <path
+          d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
+        <path
+          d="M12 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-5 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m2-3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-5 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+      </svg>
+      <span>
+        {{ comment.created_at|date:"d-m-Y H:i" }}
+
+      </span> </small>
+  </div>
+  <p class="mb-0 p-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-right"
+      viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5" />
+    </svg>
+    <span>{{ comment.content }}</span>
+  </p>
+</div>
+
+{% empty %}
+<p>Hozircha izohlar yo‘q.</p>
+{% endfor %}
+
 {% endblock %}

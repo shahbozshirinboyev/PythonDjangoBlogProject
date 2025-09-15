@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Tasdiqlanmagan postlar</h2>
+
+  {% for post in posts %}
+  <div class="d-flex justify-content-between align-items-center mb-2 border p-2 rounded">
+    <div class="d-flex gap-3">
+      {% if post.image %}
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" width="100">
+      {% endif %}
+      <div>
+        <strong>
+          <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'post_detail' post.pk %}">
+            {{ post.title }}
+          </a>
+        </strong> <br>
+        <small>Muallif: {{ post.author.username }} | Sana: {{ post.created_at }}</small>
+      </div>
+    </div>
+    <a href="{% url 'approve_post' post.pk %}" class="btn btn-success btn-sm">
+      Tasdiqlash
+    </a>
+  </div>
+  {% empty %}
+  <div class="list-group-item">Hamma postlar tasdiqlangan ✅</div>
+  {% endfor %}
+
+</div>
+{% endblock %}
