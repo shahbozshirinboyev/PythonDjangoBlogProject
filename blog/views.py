@@ -47,7 +47,6 @@ class PostDetailView(DetailView):
         return self.render_to_response(context)
 
 
-# faqat staff foydalanuvchilar kira oladi
 @user_passes_test(lambda u: u.is_staff)
 @login_required
 def pending_posts(request):
@@ -68,10 +67,10 @@ def add_post(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user  # hozirgi foydalanuvchini muallif qilish
+            post.author = request.user
             post.save()
-            form.save_m2m()  # teglarni saqlash
-            return redirect("index")  # qo‘shilgandan keyin bosh sahifaga qaytarish
+            form.save_m2m()
+            return redirect("index")
     else:
         form = PostForm()
     return render(request, "blog/add_post.html", {"form": form})
